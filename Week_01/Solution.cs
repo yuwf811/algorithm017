@@ -146,4 +146,34 @@ public class Solution
         digits[0] = 0;
         return digits;
     }
+
+    public int Trap(int[] height)
+    {
+        var result = 0;
+        if (height.Length == 0)
+        {
+            return result;
+        }
+        var length = height.Length;
+        var newHeight = new int[length + 2];
+        Array.Copy(height, 0, newHeight, 1, length);
+        length += 2;
+
+        var stack = new Stack<int>();
+        stack.Push(0);
+        for (int i = 1; i < length; i++)
+        {
+            while (stack.Any() && height[stack.Peek()] < height[i])
+            {
+                var index = stack.Pop();
+                if (stack.Any())
+                {
+                    result += (i - index) * (Math.Min(height[stack.Peek()], height[i]) - height[index]);
+                }
+            }
+
+            stack.Push(i);
+        }
+        return result;
+    }
 }
