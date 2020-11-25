@@ -1,21 +1,24 @@
 学习笔记
 
 1. C# PriorityQueue实现
+
 ```
 public class PriorityQueue<T> where T : IComparable
 {
     private List<T> data;
-
-    public PriorityQueue()
+    private bool isAsc;
+    public PriorityQueue(bool isAsc = true)
     {
         this.data = new List<T>();
+        this.isAsc = isAsc;
     }
 
     public void Enqueue(T item)
     {
         data.Add(item);
         var index = data.Count - 1;
-        while (index > 0 && item.CompareTo(data[(index - 1) / 2]) < 0)
+        while (index > 0 && (isAsc && item.CompareTo(data[(index - 1) / 2]) < 0
+                            || !isAsc && item.CompareTo(data[(index - 1) / 2]) > 0)) 
         {
             var temp = data[index];
             data[index] = data[(index - 1) / 2];
@@ -47,11 +50,13 @@ public class PriorityQueue<T> where T : IComparable
                     break;
                 }
                 var p2 = left;
-                if (right < data.Count && data[left].CompareTo(data[right]) > 0)
+                if (right < data.Count && (isAsc && data[left].CompareTo(data[right]) > 0
+                                        || !isAsc && data[left].CompareTo(data[right]) < 0))
                 {
                     p2 = right;
                 }
-                if (data[p1].CompareTo(data[p2]) <= 0)
+                if (isAsc && data[p1].CompareTo(data[p2]) <= 0
+                    || !isAsc && data[p1].CompareTo(data[p2]) >= 0)
                 {
                     break;
                 }
